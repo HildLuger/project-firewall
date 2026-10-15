@@ -101,9 +101,9 @@
       };
 
       // ---------------------------------------------------------------- browser hotkeys while playing
-      // Ctrl is crouch and Shift is aim, so Ctrl+S / Ctrl+D / Ctrl+E / Ctrl+R / Ctrl+1 and plain Tab, Space, Alt and the
-      // F-keys would otherwise save the page, bookmark it, focus the address bar, reload, switch tabs, move focus or open
-      // the menu bar mid-fight. While the game reports a run in progress (Firewall.jslib FirewallCapture) or the pointer
+      // Shift is aim and a stray Ctrl is easy to hit, so Ctrl+S / Ctrl+D / Ctrl+E / Ctrl+R / Ctrl+1 and plain Tab, Space,
+      // Alt and the F-keys would otherwise save the page, bookmark it, focus the address bar, reload, switch tabs, move
+      // focus or open the menu bar mid-fight (crouch moved from Ctrl to C for the same reason: Ctrl+W closes the tab). While the game reports a run in progress (Firewall.jslib FirewallCapture) or the pointer
       // is locked to the canvas, every key event is marked handled before the browser acts on it; Unity still receives
       // them (capture-phase listener, no stopPropagation). Esc stays with the browser (it releases pointer lock; the game
       // pauses on it anyway), F11 keeps toggling fullscreen and F12 / Ctrl+Shift+I keep the dev tools reachable.
@@ -158,12 +158,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/74cc1daa179f0471fd428dc3ca6584a3.loader.js";
+      var loaderUrl = buildUrl + "/597e4ef26e9d809d74d5108982252ce7.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/9044d4bc8d2ffe621d68e04c91802151.data.unityweb",
+        dataUrl: buildUrl + "/3602331b708f55c3bc88270e4ec60b67.data.unityweb",
         frameworkUrl: buildUrl + "/a89ada16d7199ca0981b3552d3f439e8.framework.js.unityweb",
-        codeUrl: buildUrl + "/63b1060f5ba47b8f892abb39e454eb52.wasm.unityweb",
+        codeUrl: buildUrl + "/525edb57e3fbe0b69658a06ae564cf13.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Project Firewall",
         productName: "Project Firewall",
