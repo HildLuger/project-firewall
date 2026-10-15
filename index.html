@@ -63,7 +63,7 @@
 
       var canvas = document.querySelector("#unity-canvas");
       var loading = document.querySelector("#unity-loading"), fill = document.querySelector("#unity-bar-fill");
-      var statusEl = document.querySelector("#unity-status"), pct = document.querySelector("#unity-pct");   // not `status`: that is window.status
+      var status = document.querySelector("#unity-status"), pct = document.querySelector("#unity-pct");
       function unityShowBanner(msg, type) {
         var warningBanner = document.querySelector("#unity-warning");
         var div = document.createElement("div");
@@ -81,7 +81,7 @@
       function setBar(f, text) {
         f = Math.max(shown, Math.min(1, f)); shown = f;   // never runs backwards
         fill.style.width = (100 * f) + "%"; pct.textContent = Math.round(100 * f) + "%";
-        if (text) statusEl.textContent = text;
+        if (text) status.textContent = text;
       }
       window.firewallProgress = function (msg, fraction) { setBar(DOWNLOAD_SHARE + (1 - DOWNLOAD_SHARE) * fraction, msg); };
       // Ready: the overlay turns into a "click to start" gate. Browsers only let audio play after a user gesture, so the
@@ -92,6 +92,8 @@
         setBar(1, "LINK ESTABLISHED"); loading.classList.add("armed");
         function start(e) {
           if (e && e.type === "keydown" && (e.key === "Tab" || e.altKey || e.ctrlKey || e.metaKey)) return;
+          // The game polls this (Firewall.jslib) and holds its music until the gesture has unlocked the audio context.
+          window.firewallStartedAt = Date.now();
           loading.classList.remove("armed"); loading.classList.add("done"); canvas.focus();
           window.removeEventListener("keydown", start); loading.removeEventListener("pointerdown", start);
         }
@@ -110,12 +112,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/a2dd01fc3cbb863dc1b65c5cdd6674b8.loader.js";
+      var loaderUrl = buildUrl + "/d8fcad22d14f2ecc15f8916cebaf656f.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/70c6b497ab555dab846a74eb573e5463.data.unityweb",
-        frameworkUrl: buildUrl + "/c55d3d29100b11012dedcc6ed1c56f67.framework.js.unityweb",
-        codeUrl: buildUrl + "/6d175b5f929aea1c61e158f196cb6318.wasm.unityweb",
+        dataUrl: buildUrl + "/93e7f35b652d9f2e4ad251aa7c833235.data.unityweb",
+        frameworkUrl: buildUrl + "/d958d845144a9b92e0fd068453b78767.framework.js.unityweb",
+        codeUrl: buildUrl + "/5d87c0773d52f3e6bf719beecdaf9e36.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Project Firewall",
         productName: "Project Firewall",
