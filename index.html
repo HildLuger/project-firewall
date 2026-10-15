@@ -95,6 +95,9 @@
           // The game polls this (Firewall.jslib) and holds its music until the gesture has unlocked the audio context.
           window.firewallStartedAt = Date.now();
           loading.classList.remove("armed"); loading.classList.add("done"); canvas.focus();
+          // Fullscreen on the start gesture: the Keyboard Lock below only takes effect in element fullscreen, and it is the
+          // one way a page can keep Ctrl+W / Ctrl+T / Ctrl+Tab from closing or leaving the tab (Chrome / Edge; Esc leaves).
+          try { var fs = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen({ navigationUI: "hide" }); if (fs && fs.catch) fs.catch(function () {}); } catch (x) {}
           window.removeEventListener("keydown", start); loading.removeEventListener("pointerdown", start);
         }
         loading.addEventListener("pointerdown", start); window.addEventListener("keydown", start);
@@ -111,7 +114,8 @@
       // Keyboard Lock API (fullscreen only): those get a "leave site?" confirmation instead, and the lock is requested
       // so that an element-fullscreen session captures them too.
       var captureOn = false, keyLockHeld = false;
-      function inGame() { return captureOn || document.pointerLockElement === canvas; }
+      // a run in progress, the pointer locked to the canvas, or the fullscreen the start click entered (title screen included)
+      function inGame() { return captureOn || document.pointerLockElement === canvas || !!document.fullscreenElement; }
       var LOCK_KEYS = (function () {
         var k = ["Tab", "Space", "Enter", "Backspace", "ShiftLeft", "ShiftRight", "ControlLeft", "ControlRight", "AltLeft", "AltRight",
                  "MetaLeft", "MetaRight", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Minus", "Equal", "NumpadEnter"];
@@ -129,6 +133,7 @@
       }
       window.firewallCapture = function (on) { captureOn = !!on; syncKeyLock(); };
       document.addEventListener("pointerlockchange", syncKeyLock);
+      document.addEventListener("fullscreenchange", syncKeyLock);
       function guardKey(e) {
         if (!inGame()) return;
         var code = e.code || e.key;
@@ -144,7 +149,8 @@
       window.addEventListener("mousedown", guardMouse, true);
       window.addEventListener("mouseup", guardMouse, true);
       window.addEventListener("auxclick", guardMouse, true);
-      window.addEventListener("beforeunload", function (e) { if (inGame()) { e.preventDefault(); e.returnValue = ""; } });
+      // once the game has started, leaving the page (a Ctrl+W that got through, a closed window) asks first
+      window.addEventListener("beforeunload", function (e) { if (inGame() || window.firewallStartedAt) { e.preventDefault(); e.returnValue = ""; } });
 
       // The browser's limit is fill rate: the per-pixel lab surfaces, ambient occlusion and the post stack all scale
       // with the backing store. Cap it by pixel count (about 1080p) rather than by device pixel ratio, so a 4K or a
@@ -158,12 +164,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/6b6cd3042f30851469cde3bcc160127c.loader.js";
+      var loaderUrl = buildUrl + "/6d10a50dea63c78b29b46b1e9b1b7ce8.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/b937150ce0de89198fb71b5020b365f1.data.unityweb",
+        dataUrl: buildUrl + "/255b85e0e2a2299604017b4c48f03dd9.data.unityweb",
         frameworkUrl: buildUrl + "/a89ada16d7199ca0981b3552d3f439e8.framework.js.unityweb",
-        codeUrl: buildUrl + "/4b0e98bdf4192e08ac4de0c4374ee51d.wasm.unityweb",
+        codeUrl: buildUrl + "/426ea9d1b460d0f817b46d125d5b1bb2.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Project Firewall",
         productName: "Project Firewall",
